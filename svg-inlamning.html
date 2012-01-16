@@ -14,7 +14,7 @@
 		background-color: red;
 	}
 	#mittlinje{
-		stroke: #;
+		stroke: #444;
 		stroke-width: 1;
 		color: black;
 	}
@@ -23,7 +23,7 @@
 </style>
 </head>
 <body>
-<svg width="1330" height="600">
+<svg width="1330" height="600" id="plan">
 	<rect x="10" y="20" width="40" height="150" id="rect2"/>
 	<rect x="1280" y="20" width="40" height="150" id="rect1" />
 	<circle cx="600" cy="300" r="20" stroke="black" stroke-width="2" id="bollen" />
@@ -38,27 +38,66 @@
     var lpad_y = lpad.getAttribute("y");
         switch(e.keyCode) {
         case 38:
-            rpad.setAttribute("y", rpad_y - 10);
-            console.log(rpad_y);
+			if (rpad_y >= 15){
+			rpad.setAttribute("y", rpad_y - 20);
+			}
             break;
 
         case 40:
-            rpad.setAttribute("y", +rpad_y + 10);
-            console.log(rpad_y);
+			if (rpad_y <= 430){
+			rpad.setAttribute("y", +rpad_y + 20);
+			}
             break;
 
         case 87:
-            lpad.setAttribute("y", lpad_y - 10);
-            console.log(lpad_y);
+            if (lpad_y >= 15){
+			lpad.setAttribute("y", lpad_y -20);
+			}
             break;
 
         case 83:
-            lpad.setAttribute("y", +lpad_y + 10);
-            console.log(lpad_y);
+            if (lpad_y <= 430){
+			lpad.setAttribute("y", +lpad_y + 20);
+			}
             break;
       }
+	  
+	  
       return false;
 }
+var totspeed = 10;
+var startvinkel = Math.random() * 0.5 * Math.PI - Math.PI * 0.25;
+
+var boll = {
+    x : 600,
+	y : 300,
+	xspeed : Math.cos(startvinkel) * totspeed,
+	yspeed : Math.sin(startvinkel) * totspeed,
+	bollen : document.getElementById("bollen")
+};
+function moveball() {
+    if ( boll.y < 20 ) {
+	    boll.yspeed = Math.abs(boll.yspeed);
+    }
+	// studs uppe
+	else if (boll.y	> 580){
+		boll.yspeed = -Math.abs(boll.yspeed);
+	}
+	// studs nere
+	if (boll.x < 20) {
+		boll.xspeed = Math.abs(boll.xspeed);
+	}
+	else if (boll.x > 1310){
+		boll.xspeed = -Math.abs(boll.xspeed);
+	}
+    boll.x += boll.xspeed;
+    boll.y += boll.yspeed;
+	boll.bollen.setAttribute("cx", boll.x);
+	boll.bollen.setAttribute("cy", boll.y);
+	console.log(boll.x);
+	window.setTimeout(moveball, 20);
+}
+moveball();
 </script>
 </body>
 </html>
