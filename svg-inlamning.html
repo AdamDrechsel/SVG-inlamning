@@ -30,72 +30,94 @@
 	<line y1="0" x1="650" y2="600" x2="650" id="mittlinje" />
 </svg>
 <script>
-    window.onkeydown = function (e) {
-    var rpad = document.getElementById("rect1");
-    var lpad = document.getElementById("rect2");
-    var ball = document.getElementById("bollen");
-    var rpad_y = rpad.getAttribute("y");
-    var lpad_y = lpad.getAttribute("y");
-        switch(e.keyCode) {
-        case 38:
-			if (rpad_y >= 15){
-			rpad.setAttribute("y", rpad_y - 20);
-			}
-            break;
+var rpad = document.getElementById("rect1");
+var lpad = document.getElementById("rect2");
+var rpad_y = rpad.getAttribute("y");
+var lpad_y = lpad.getAttribute("y");
 
-        case 40:
-			if (rpad_y <= 430){
-			rpad.setAttribute("y", +rpad_y + 20);
-			}
-            break;
+window.onkeydown = function (e) {
+    switch(e.keyCode) {
+    case 38:
+        if (rpad_y >= 15){
+            rpad_y -= 20;
+            rpad.setAttribute("y", rpad_y);
+        }
+        break;
 
-        case 87:
-            if (lpad_y >= 15){
-			lpad.setAttribute("y", lpad_y -20);
-			}
-            break;
+    case 40:
+        if (rpad_y <= 430){
+			rpad_y = +rpad_y +20;
+            rpad.setAttribute("y", rpad_y);
+        }
+        break;
 
-        case 83:
-            if (lpad_y <= 430){
-			lpad.setAttribute("y", +lpad_y + 20);
-			}
-            break;
-      }
-	  
-	  
-      return false;
+    case 65:
+        if (lpad_y >= 15){
+			lpad_y -= 20;
+            lpad.setAttribute("y", lpad_y);
+        }
+        break;
+
+    case 90:
+        if (lpad_y <= 430){
+			lpad_y = +lpad_y + 20;
+            lpad.setAttribute("y", lpad_y);
+        }
+        break;
+    }
+    return false;
 }
 var totspeed = 10;
 var startvinkel = Math.random() * 0.5 * Math.PI - Math.PI * 0.25;
 
 var boll = {
     x : 600,
-	y : 300,
-	xspeed : Math.cos(startvinkel) * totspeed,
-	yspeed : Math.sin(startvinkel) * totspeed,
-	bollen : document.getElementById("bollen")
+    y : 300,
+    xspeed : Math.cos(startvinkel) * totspeed,
+    yspeed : Math.sin(startvinkel) * totspeed,
+    bollen : document.getElementById("bollen")
 };
+boll.r = boll.bollen.getAttribute("r");
+
 function moveball() {
     if ( boll.y < 20 ) {
-	    boll.yspeed = Math.abs(boll.yspeed);
+        boll.yspeed = Math.abs(boll.yspeed);
     }
-	// studs uppe
-	else if (boll.y	> 580){
-		boll.yspeed = -Math.abs(boll.yspeed);
-	}
-	// studs nere
-	if (boll.x < 20) {
-		boll.xspeed = Math.abs(boll.xspeed);
-	}
-	else if (boll.x > 1310){
-		boll.xspeed = -Math.abs(boll.xspeed);
-	}
+    // studs uppe
+    else if (boll.y > 580) {
+        boll.yspeed = -Math.abs(boll.yspeed);
+    }
+    // studs nere
+    if (boll.x < 70) {
+        // Träffar den paddeln?
+        if ( boll.y >= lpad_y - boll.r && boll.y <= +lpad_y + 150 + +boll.r ) {
+		    console.log("träff vänster" + boll.y + " - " + lpad_y);
+            // Träff
+            // Paddelns mitt lpad_y + 75
+            var vinkel = (boll.y - lpad_y - 75) * Math.PI /260;
+            boll.xspeed = Math.cos(vinkel) * totspeed;
+            boll.yspeed = Math.sin(vinkel) * totspeed;
+        }
+        if ( boll.x < 0 ) {
+            return false;
+        }
+    }
+		if (boll.x > 1280) {
+		// träffar den höger-paddeln?
+			if ( boll.y >= rpad_y - boll.r && boll.y <= +rpad_y + 150 + +boll.r ) {
+				var vinkel = (boll.y - rpad_y - 75) * Math.PI /260;
+				boll.xspeed = -Math.cos(vinkel) * totspeed;
+				boll.yspeed = Math.sin(vinkel) * totspeed;
+			}
+		if (boll.x > 1330) {
+			return false;
+		}
+		}
     boll.x += boll.xspeed;
     boll.y += boll.yspeed;
-	boll.bollen.setAttribute("cx", boll.x);
-	boll.bollen.setAttribute("cy", boll.y);
-	console.log(boll.x);
-	window.setTimeout(moveball, 20);
+    boll.bollen.setAttribute("cx", boll.x);
+    boll.bollen.setAttribute("cy", boll.y);
+    window.setTimeout(moveball, 30);
 }
 moveball();
 </script>
