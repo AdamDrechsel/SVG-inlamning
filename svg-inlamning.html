@@ -34,6 +34,7 @@ var rpad = document.getElementById("rect1");
 var lpad = document.getElementById("rect2");
 var rpad_y = rpad.getAttribute("y");
 var lpad_y = lpad.getAttribute("y");
+var fired = false;
 
 window.onkeydown = function (e) {
     switch(e.keyCode) {
@@ -66,6 +67,18 @@ window.onkeydown = function (e) {
         break;
     }
     return false;
+}
+keydown = function (a) {
+	if (fired) {
+		return false;
+	}
+	else {
+		fired = true;
+	}
+}
+
+keyup = function (b) {
+	fired = false;
 }
 var totspeed = 10;
 var startvinkel = Math.random() * 0.5 * Math.PI - Math.PI * 0.25;
@@ -102,7 +115,7 @@ function moveball() {
             return false;
         }
     }
-		if (boll.x > 1280) {
+		if (boll.x > 1260) {
 		// träffar den höger-paddeln?
 			if ( boll.y >= rpad_y - boll.r && boll.y <= +rpad_y + 150 + +boll.r ) {
 				var vinkel = (boll.y - rpad_y - 75) * Math.PI /260;
