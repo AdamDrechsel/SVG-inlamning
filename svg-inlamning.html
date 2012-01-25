@@ -92,7 +92,7 @@ function moveball() {
         // Träffar den paddeln?
         if ( boll.y >= lpad_y - boll.r && boll.y <= +lpad_y + 150 + +boll.r ) {
 		    console.log("träff vänster" + boll.y + " - " + lpad_y);
-            // Träff
+            // Träff-vänster
             // Paddelns mitt lpad_y + 75
             var vinkel = (boll.y - lpad_y - 75) * Math.PI /260;
             boll.xspeed = Math.cos(vinkel) * totspeed;
@@ -108,9 +108,11 @@ function moveball() {
 				var vinkel = (boll.y - rpad_y - 75) * Math.PI /260;
 				boll.xspeed = -Math.cos(vinkel) * totspeed;
 				boll.yspeed = Math.sin(vinkel) * totspeed;
+				// träff-höger
 			}
 		if (boll.x > 1330) {
 			return false;
+			// miss- höger
 		}
 		}
     boll.x += boll.xspeed;
