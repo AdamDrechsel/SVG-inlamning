@@ -323,7 +323,6 @@ function moveball() {
         if ( boll.x < 0 ) {
             // Räkna upp poäng för spelare höger
 			// Återställ bollen till mitten och anropa moveball() ev efter timeout
-			console.log("poäng höger");
 			player_right_points += 1;
 			boll.x = 665;
 			boll.y = 300;
@@ -342,7 +341,6 @@ function moveball() {
 		
 		}
 		else {
-			console.log("Timeout right");
 			setTimeout(moveball, 2000);
 			
 			return false;
@@ -359,7 +357,6 @@ function moveball() {
             }
         if (boll.x > 1330) {
             // poäng till left-player
-			console.log("poäng vänster");
             player_left_points += 1;
 			boll.x = 665;
 			boll.y = 300;
@@ -378,7 +375,6 @@ function moveball() {
 		}
 
 		else {
-			console.log("timeout left");
 			setTimeout(moveball, 2000);
 			
 			return false;
