@@ -18,6 +18,17 @@
 		stroke-width: 1;
 		color: black;
 	}
+	#right_player {
+		font-size: 100px;
+	
+	}
+	#left_player {
+		font-size: 100px;
+	}
+	
+	#result{
+		font-size: 100px;
+	}
 
 	
 </style>
@@ -154,10 +165,10 @@
 	<use xlink:href="#star" x="200"  y="50"/>
 	<use xlink:href="#star" x="300"  y="50"/>
 	<use xlink:href="#star" x="400"  y="50"/>
-	<use xlink:href="#star" x="500"  y="50"/>
+	<!-- <use xlink:href="#star" x="500"  y="50"/> -->
 	<use xlink:href="#star" x="600"  y="50"/>
 	<use xlink:href="#star" x="700"  y="50"/>
-	<use xlink:href="#star" x="800"  y="50"/>
+	<!-- <use xlink:href="#star" x="800"  y="50"/> -->
 	<use xlink:href="#star" x="900"  y="50"/>
 	<use xlink:href="#star" x="1000"  y="50"/>
 	<use xlink:href="#star" x="1100"  y="50"/>
@@ -197,7 +208,10 @@
 		<rect x="10" y="20" width="40" height="150" id="rect2"/>
 	<rect x="1280" y="20" width="40" height="150" id="rect1" />
 	<circle cx="600" cy="300" r="20" stroke="black" stroke-width="2" id="bollen" />
+	<text id="left_player"x="480" y="70">0</text>
 	<line y1="0" x1="650" y2="600" x2="650" id="mittlinje" />
+	<text id="right_player" x="780" y="70">0</text>
+	<text id="result" x="615" y="200"></text>
 	// Paddel 1 & 2 + Plan + Boll + Mittlinje
 
 
@@ -211,7 +225,12 @@ var lpad = document.getElementById("rect2");
 var lpad_y = lpad.getAttribute("y");
 var lpad_speed = 0;
 
+var player_left_points = 0
+var player_right_points = 0
+
 var fired = false;
+
+
 
 window.onkeydown = function (e) {
     if (fired) {
@@ -259,7 +278,7 @@ window.onkeyup = function () {
     rpad_speed = 0;
     lpad_speed = 0;
 }
-var totspeed = 10;
+var totspeed = 20;
 var startvinkel = Math.random() * 0.5 * Math.PI - Math.PI * 0.25;
 
 var boll = {
@@ -295,7 +314,6 @@ function moveball() {
     if (boll.x < 70) {
         // Träffar den paddeln?
         if ( boll.y >= lpad_y - boll.r && boll.y <= +lpad_y + 150 + +boll.r ) {
-            console.log("träff vänster" + boll.y + " - " + lpad_y);
             // Träff-vänster
             // Paddelns mitt lpad_y + 75
             var vinkel = (boll.y - lpad_y - 75) * Math.PI /260;
@@ -303,7 +321,33 @@ function moveball() {
             boll.yspeed = Math.sin(vinkel) * totspeed;
         }
         if ( boll.x < 0 ) {
-            return false;
+            // Räkna upp poäng för spelare höger
+			// Återställ bollen till mitten och anropa moveball() ev efter timeout
+			console.log("poäng höger");
+			player_right_points += 1;
+			boll.x = 665;
+			boll.y = 300;
+			startvinkel = Math.random() * 0.5 * Math.PI - Math.PI * 0.25;
+			boll.xspeed = Math.cos(startvinkel) * totspeed;
+			boll.yspeed = Math.sin(startvinkel) * totspeed;
+			
+			document.getElementById("right_player").textContent = player_right_points;
+			
+			return false;
+			
+			if (player_right_points > 1) {
+		
+				document.getElementById("result").textContent = "Player Right wins!";
+		
+				return false;
+		
+		}
+		else {
+			console.log("TImeout right");
+			setTimeout(moveball, 2000);
+			
+			return false;
+		}
         }
     }
         if (boll.x > 1260) {
@@ -315,10 +359,33 @@ function moveball() {
                 // träff-höger
             }
         if (boll.x > 1330) {
-            return false;
-            // miss- höger
+            // poäng till left-player
+			console.log("poäng vänster");
+            player_left_points = player_left_points + 1;
+			boll.x = 665;
+			boll.y = 300;
+			startvinkel = Math.random() * 0.5 * Math.PI - Math.PI * 0.25;
+			boll.xspeed = Math.cos(startvinkel) * totspeed;
+			boll.yspeed = Math.sin(startvinkel) * totspeed;
+			
+			document.getElementById("left_player").textContent = player_left_points;
+			
+		if (player_left_points > 1) {
+		
+    		document.getElementById("result").textContent = "Player left wins!";
+		
+			return false;
+		
+		}
+
+		else {
+			console.log("timeout left");
+			setTimeout(moveball, 2000);
+			
+			return false;
+		}
         }
-        }
+		}
     boll.x += boll.xspeed;
     boll.y += boll.yspeed;
     boll.bollen.setAttribute("cx", boll.x);
